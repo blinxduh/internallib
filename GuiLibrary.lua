@@ -168,16 +168,11 @@ mouse["mouseDown"] = function(Target, Method)
 end
 
 library["init"] = function()
+	local internalName = "" or "InternalLibraryGUIv1.0"
 	local InternalGui = Instance.new("ScreenGui")
-	InternalGui.Name = "InternalGui"
-	InternalGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+	InternalGui.Name = internalName
+	InternalGui.Parent = game.CoreGui
 	InternalGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-	
-	for i, item in pairs(roblox.thePlayer.PlayerGui:GetChildren()) do 
-		if item.Name == InternalGui.Name then 
-			item:Destroy()
-		end
-	end
 	
 	local gui = {}
 
@@ -191,6 +186,14 @@ library["init"] = function()
 		local open = true
 		local dragging = false
 		local height = 30
+		
+		internalName = Name or "InternalLibraryGUIv1.0"
+		table.insert(library, internalName)
+		for i, v in pairs() do 
+		   if v:IsA("ScreenGui") and v.Name == internalName then 
+		       v:Destroy()
+		   end
+		end
 		
 		Panel.Position = UDim2.new(0, 40, 0, 40)
 		
