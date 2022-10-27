@@ -189,11 +189,6 @@ library["init"] = function()
 		
 		internalName = Name or "InternalLibraryGUIv1.0"
 		table.insert(library, internalName)
-		for i, v in pairs() do 
-		   if v:IsA("ScreenGui") and v.Name == internalName then 
-		       v:Destroy()
-		   end
-		end
 		
 		Panel.Position = UDim2.new(0, 40, 0, 40)
 		
