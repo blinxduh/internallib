@@ -174,6 +174,12 @@ library["init"] = function()
 	InternalGui.Parent = game.CoreGui
 	InternalGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 	
+	for i, a in pairs(game.CoreGui:GetChildren()) do 
+	    if a:IsA("ScreenGui") and a.Name == internalName then 
+		a:Destroy()
+	    end
+	end
+	
 	local gui = {}
 
 	gui["drawPanel"] = function(Name)
