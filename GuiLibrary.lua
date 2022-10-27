@@ -1,7 +1,7 @@
 local notifications = {}
 local anim = {}
 
-anim["update"] = function(Target: Frame, Time: number, ShowTime: number)
+anim["update"] = function(Target, Time, ShowTime)
 	game:GetService("TweenService"):Create(Target, TweenInfo.new(Time), {Position = UDim2.new(0.6, 0, 0.15, 0)}):Play()
 	wait(ShowTime)
 	game:GetService("TweenService"):Create(Target, TweenInfo.new(Time), {Position = UDim2.new(1, 0, 0.15, 0)}):Play()
@@ -9,7 +9,7 @@ anim["update"] = function(Target: Frame, Time: number, ShowTime: number)
 	Target:Destroy()
 end
 
-notifications["render"] = function(Description: string, Duration: number)
+notifications["render"] = function(Description, Duration)
 	local Notification = Instance.new("ScreenGui")
 	local NotificationRenderer = Instance.new("Frame")
 	local Notification_2 = Instance.new("Frame")
@@ -117,7 +117,7 @@ utils["eventUpdate"] = function(Method)
 	end)
 end
 
-mouse["mouseClicked"] = function(Target: GuiObject, Button: number, Method)
+mouse["mouseClicked"] = function(Target, Button, Method)
 	local method = Method or function() end
 	local entered = false
 	Target.MouseEnter:Connect(function() entered = true end)
@@ -142,17 +142,17 @@ mouse["mouseClicked"] = function(Target: GuiObject, Button: number, Method)
 	end)
 end
 
-mouse["mouseEnter"] = function(Target: GuiObject, Method)
+mouse["mouseEnter"] = function(Target, Method)
 	local method = Method or function() end
 	Target.MouseEnter:Connect(function() pcall(method) end)
 end
 
-mouse["mouseLeave"] = function(Target: GuiObject, Method)
+mouse["mouseLeave"] = function(Target, Method)
 	local method = Method or function() end
 	Target.MouseLeave:Connect(function() pcall(method) end)
 end
 
-mouse["mouseDown"] = function(Target: GuiObject, Method)
+mouse["mouseDown"] = function(Target, Method)
 	local method = Method or function() end
 	local entered = false
 	Target.MouseEnter:Connect(function() entered = true end)
@@ -174,7 +174,7 @@ library["init"] = function()
 	
 	local gui = {}
 	
-	gui["drawPanel"] = function(Name: string)
+	gui["drawPanel"] = function(Name)
 		local Panel = Instance.new("Frame")
 		local PanelTitle = Instance.new("TextLabel")
 		local PanelTitlePadding = Instance.new("UIPadding")
@@ -218,7 +218,7 @@ library["init"] = function()
 		
 		local module = {}
 		
-		module["addModule"] = function(Name: string, OnEnabled, OnDisabled)
+		module["addModule"] = function(Name, OnEnabled, OnDisabled)
 			local methodEnabled = OnEnabled or function() end
 			local methodDisabled = OnDisabled or function() end
 			local Module = Instance.new("Frame")
@@ -294,7 +294,7 @@ library["init"] = function()
 			
 			local value = {}
 			
-			value["newBoolean"] = function(Name: string, State: boolean)
+			value["newBoolean"] = function(Name, State)
 				local BooleanSetting = Instance.new("Frame")
 				local BooleanSettingLayout = Instance.new("UIListLayout")
 				local BooleanSettingPadding = Instance.new("UIPadding")
@@ -383,7 +383,7 @@ library["init"] = function()
 				return getters
 			end
 			
-			value["newMode"] = function(Name: string, Modes: {})
+			value["newMode"] = function(Name, Modes)
 				local ModeSetting = Instance.new("Frame")
 				local ModeLabel = Instance.new("TextLabel")
 				local ModeSettingLayout = Instance.new("UIListLayout")
