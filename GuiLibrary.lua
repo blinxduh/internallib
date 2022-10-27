@@ -172,7 +172,13 @@ library["init"] = function()
 	InternalGui.Name = "InternalGui"
 	InternalGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 	InternalGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-
+	
+	for i, item in pairs(roblox.thePlayer.PlayerGui:GetChildren()) do 
+		if item.Name == InternalGui.Name then 
+			item:Destroy()
+		end
+	end
+	
 	local gui = {}
 
 	gui["drawPanel"] = function(Name)
