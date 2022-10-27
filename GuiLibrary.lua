@@ -2,9 +2,9 @@ local notifications = {}
 local anim = {}
 
 anim["update"] = function(Target, Time, ShowTime)
-	game:GetService("TweenService"):Create(Target, TweenInfo.new(Time), {Position = UDim2.new(0.6, 0, 0.15, 0)}):Play()
+	game:GetService("TweenService"):Create(Target, TweenInfo.new(Time, Enum.EasingStyle.Exponential), {Position = UDim2.new(0.021, 0,0.467, 0)}):Play()
 	wait(ShowTime)
-	game:GetService("TweenService"):Create(Target, TweenInfo.new(Time), {Position = UDim2.new(1, 0, 0.15, 0)}):Play()
+	game:GetService("TweenService"):Create(Target, TweenInfo.new(Time, Enum.EasingStyle.Exponential), {Position = UDim2.new(-0.521, 0,0.467, 0)}):Play()
 	wait(2)
 	Target:Destroy()
 end
@@ -32,14 +32,14 @@ notifications["render"] = function(Description, Duration)
 	NotificationRenderer.Parent = Notification
 	NotificationRenderer.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 	NotificationRenderer.BackgroundTransparency = 1.000
-	NotificationRenderer.Position = UDim2.new(0.678864837, 0, 0, 0)
+	NotificationRenderer.Position = UDim2.new(-0, 0, 0.923, 0)
 	NotificationRenderer.Size = UDim2.new(0, 430, 0, 60)
 
 	Notification_2.Name = "Notification"
 	Notification_2.Parent = NotificationRenderer
 	Notification_2.BackgroundColor3 = Color3.fromRGB(26, 26, 26)
 	Notification_2.BorderSizePixel = 0
-	Notification_2.Position = UDim2.new(1, 0, 0.15, 0)
+	Notification_2.Position = UDim2.new(-0.521, 0,0.467, 0)
 	Notification_2.Size = UDim2.new(0, 130, 0, 20)
 
 	NotificationTypeInfo.Name = "NotificationTypeInfo"
@@ -94,7 +94,8 @@ notifications["render"] = function(Description, Duration)
 end
 local library = {
 	["notification"] = notifications,
-	["modules"] = {}
+	["modules"] = {},
+	["panels"] = {}
 }
 local mouse = {}
 local value = {}
@@ -171,25 +172,30 @@ library["init"] = function()
 	InternalGui.Name = "InternalGui"
 	InternalGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 	InternalGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-	
+
 	local gui = {}
-	
+
 	gui["drawPanel"] = function(Name)
 		local Panel = Instance.new("Frame")
 		local PanelTitle = Instance.new("TextLabel")
 		local PanelTitlePadding = Instance.new("UIPadding")
 		local PaneLayout = Instance.new("UIListLayout")
-		local offset = 180
-		local count = 0
+		local x = 180
+		local offset = 0
 		local open = true
 		local dragging = false
 		local height = 30
+		
+		Panel.Position = UDim2.new(0, 40, 0, 40)
+		
+		for index, item in next, library.panels do
+			Panel.Position = UDim2.new(0, 40 + (x * index) + 5, 0, 40)
+		end
 		
 		Panel.Name = Name.."Panel"
 		Panel.Parent = InternalGui
 		Panel.BackgroundColor3 = Color3.fromRGB(26, 26, 26)
 		Panel.BorderSizePixel = 0
-		Panel.Position = UDim2.new(0, 20 + offset, 0, 20)
 		Panel.Size = UDim2.new(0, 180, 0, height)
 		Panel.Active = true
 		Panel.Draggable = true
@@ -213,14 +219,14 @@ library["init"] = function()
 		PaneLayout.Name = "PaneLayout"
 		PaneLayout.Parent = Panel
 		PaneLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+		offset = offset + 1
 		
-		count = count + 1
-		
+		table.insert(library.panels, Name)
+
 		local module = {}
-		
-		module["addModule"] = function(Name, OnEnabled, OnDisabled)
-			local methodEnabled = OnEnabled or function() end
-			local methodDisabled = OnDisabled or function() end
+
+		module["addModule"] = function(Name, onEnabled, onDisabled)
 			local Module = Instance.new("Frame")
 			local ModuleLabel = Instance.new("TextLabel")
 			local ModuleLabelPadding = Instance.new("UIPadding")
@@ -235,7 +241,7 @@ library["init"] = function()
 
 				}
 			}
-			
+
 			Module.Name = "Module"
 			Module.Parent = Panel
 			Module.BackgroundColor3 = Color3.fromRGB(26, 26, 26)
@@ -263,37 +269,37 @@ library["init"] = function()
 			ModuleLayout.Name = "ModuleLayout"
 			ModuleLayout.Parent = Module
 			ModuleLayout.SortOrder = Enum.SortOrder.LayoutOrder
-			
+
 			mouse.mouseClicked(ModuleLabel, 1, function()
 				open = not open
 
 				if (open) then
-					utils.anim:Create(Module, TweenInfo.new(.25), {Size = UDim2.new(0, 180, 0, offset)}):Play()
+					utils.anim:Create(Module, TweenInfo.new(.25, Enum.EasingStyle.Exponential), {Size = UDim2.new(0, 180, 0, offset)}):Play()
 				else
-					utils.anim:Create(Module, TweenInfo.new(.25), {Size = UDim2.new(0, 180, 0, 25)}):Play()
+					utils.anim:Create(Module, TweenInfo.new(.25, Enum.EasingStyle.Exponential), {Size = UDim2.new(0, 180, 0, 25)}):Play()
 				end
 			end)
-			
+
 			mouse.mouseClicked(ModuleLabel, 0, function()
 				enabled = not enabled
 
 				if (enabled) then
-					pcall(methodEnabled)
+					pcall(onEnabled)
 					library.notification.render("Enabled " .. Name, 1)
 				else
-					pcall(methodDisabled)
+					pcall(onDisabled)
 					library.notification.render("Disabled " .. Name, 1)
 				end
 			end)
-			
+
 			local newHeight = 25
-			
+
 			height = height + newHeight
-			
+
 			table.insert(library.modules, module)
-			
+
 			local value = {}
-			
+
 			value["newBoolean"] = function(Name, State)
 				local BooleanSetting = Instance.new("Frame")
 				local BooleanSettingLayout = Instance.new("UIListLayout")
@@ -306,7 +312,7 @@ library["init"] = function()
 					["Name"] = Name,
 					["Enabled"] = enabled
 				}
-				
+
 				BooleanSetting.Name = "BooleanSetting"
 				BooleanSetting.Parent = Module
 				BooleanSetting.BackgroundColor3 = Color3.fromRGB(22, 22, 22)
@@ -346,43 +352,43 @@ library["init"] = function()
 				BooleanLabel.TextSize = 14.000
 				BooleanLabel.TextWrapped = true
 				BooleanLabel.TextXAlignment = Enum.TextXAlignment.Left
-				
+
 				if enabled then
-					utils.anim:Create(BooleanBox, TweenInfo.new(.25), {BackgroundColor3 = Color3.fromRGB(85, 170, 255)}):Play()
+					utils.anim:Create(BooleanBox, TweenInfo.new(.25, Enum.EasingStyle.Exponential), {BackgroundColor3 = Color3.fromRGB(85, 170, 255)}):Play()
 				else
-					utils.anim:Create(BooleanBox, TweenInfo.new(.25), {BackgroundColor3 = Color3.fromRGB(47, 47, 47)}):Play()
+					utils.anim:Create(BooleanBox, TweenInfo.new(.25, Enum.EasingStyle.Exponential), {BackgroundColor3 = Color3.fromRGB(47, 47, 47)}):Play()
 				end
-				
+
 				mouse.mouseEnter(BooleanLabel, function()
-					utils.anim:Create(BooleanLabel, TweenInfo.new(.25), {TextColor3 = Color3.fromRGB(85, 170, 255)}):Play()
+					utils.anim:Create(BooleanLabel, TweenInfo.new(.25, Enum.EasingStyle.Exponential), {TextColor3 = Color3.fromRGB(85, 170, 255)}):Play()
 				end)
 
 				mouse.mouseLeave(BooleanLabel, function()
-					utils.anim:Create(BooleanLabel, TweenInfo.new(.25), {TextColor3 = Color3.fromRGB(222, 222, 222)}):Play()
+					utils.anim:Create(BooleanLabel, TweenInfo.new(.25, Enum.EasingStyle.Exponential), {TextColor3 = Color3.fromRGB(222, 222, 222)}):Play()
 				end)
-				
+
 				mouse.mouseClicked(BooleanSetting, 0, function()
 					enabled = not enabled
 					if enabled then
-						utils.anim:Create(BooleanBox, TweenInfo.new(.25), {BackgroundColor3 = Color3.fromRGB(85, 170, 255)}):Play()
+						utils.anim:Create(BooleanBox, TweenInfo.new(.25, Enum.EasingStyle.Exponential), {BackgroundColor3 = Color3.fromRGB(85, 170, 255)}):Play()
 					else
-						utils.anim:Create(BooleanBox, TweenInfo.new(.25), {BackgroundColor3 = Color3.fromRGB(47, 47, 47)}):Play()
+						utils.anim:Create(BooleanBox, TweenInfo.new(.25, Enum.EasingStyle.Exponential), {BackgroundColor3 = Color3.fromRGB(47, 47, 47)}):Play()
 					end
 				end)
-				
+
 				offset = offset + 25
-				
+
 				table.insert(module.Settings, booleanSetting)
-				
+
 				local getters = {}
-				
+
 				getters["isEnabled"] = function ()
 					return enabled
 				end
-				
+
 				return getters
 			end
-			
+
 			value["newMode"] = function(Name, Modes)
 				local ModeSetting = Instance.new("Frame")
 				local ModeLabel = Instance.new("TextLabel")
@@ -396,7 +402,7 @@ library["init"] = function()
 					["Mode"] = mode,
 					["Modes"] = Modes
 				}
-				
+
 				ModeSetting.Name = "ModeSetting"
 				ModeSetting.Parent = Module
 				ModeSetting.BackgroundColor3 = Color3.fromRGB(22, 22, 22)
@@ -419,7 +425,7 @@ library["init"] = function()
 				ModeSettingLayout.Name = "ModeSettingLayout"
 				ModeSettingLayout.Parent = ModeSetting
 				ModeSettingLayout.SortOrder = Enum.SortOrder.LayoutOrder
-				
+
 				mouse.mouseClicked(ModeLabel, 0, function()
 					open = not open
 					if open then
@@ -430,7 +436,7 @@ library["init"] = function()
 						utils.anim:Create(Module, TweenInfo.new(.25), {Size = UDim2.new(0, 180, 0, offset)}):Play()	
 					end
 				end)
-				
+
 				for index, item in next, Modes do
 					local Mode = Instance.new("TextLabel")
 					Mode.Name = "Mode"
@@ -445,33 +451,33 @@ library["init"] = function()
 					Mode.TextColor3 = Color3.fromRGB(222, 222, 222)
 					Mode.TextSize = 14.000
 					Mode.Active = true
-					
+
 					mouse.mouseClicked(Mode, 0, function()
 						ModeLabel.Text = item
 						mode = item
 					end)
-					
+
 					mouse.mouseEnter(Mode, function()
 						utils.anim:Create(Mode, TweenInfo.new(.25), {TextColor3 = Color3.fromRGB(85, 170, 255)}):Play()
 					end)
-					
+
 					mouse.mouseLeave(Mode, function()
 						utils.anim:Create(Mode, TweenInfo.new(.25), {TextColor3 = Color3.fromRGB(222, 222, 222)}):Play()
 					end)
-					
+
 					size = size + 25
 				end
-				
+
 				offset = offset + startSize
-				
+
 				table.insert(module.Settings, modeSetting)
-				
+
 				local getters = {}
-				
+
 				getters["getMode"] = function()
 					return mode
 				end
-				
+
 				return getters
 			end
 			return value
