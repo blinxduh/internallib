@@ -6,7 +6,7 @@ I'll give a documentation on how to use it.
 
 ## Initiate the library.
 ```lua
-local engine = loadstring(game:HttpGet('https://gitlab.com/internallibrary/main/-/raw/main/library.lua',true))()
+local engine = loadstring(game:HttpGet('https://raw.githubusercontent.com/blinxduh/internallib/main/_LIB.lua',true))()
 ```
 
 ## Initiate the ScreenGui.
@@ -73,7 +73,7 @@ This is the end but I might add more features soon.
 
 ## Example
 ```lua
-local engine = loadstring(game:HttpGet('https://gitlab.com/internallibrary/main/-/raw/main/library.lua',true))()
+local engine = loadstring(game:HttpGet('https://raw.githubusercontent.com/blinxduh/internallib/main/_LIB.lua',true))()
 
 local gui = engine.init()
 
