@@ -747,3 +747,5 @@ library["init"] = function()
 	end
 	return gui
 end
+
+return library
