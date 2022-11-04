@@ -68,3 +68,32 @@ end
 
 ## Conclusion.
 This is the end but I might add more features soon.
+
+
+
+## Example
+```lua
+local engine = loadstring(game:HttpGet('https://gitlab.com/internallibrary/main/-/raw/main/library.lua',true))()
+
+local gui = engine.init()
+
+local panel = gui.drawPanel("Player")
+
+local movement = panel.addFolder("Movement")
+
+local walkspeed = movement.addBooleanSetting("Walkspeed", true)
+local speed = movement.addNumberSetting("Speed", {
+    Value = 16,
+    Min = 16,
+    Max = 200,
+    Step = 1
+})
+
+game:GetService("RunService").Stepped:Connect(function()
+    if walkspeed.isEnabled() then 
+        game:GetService("Players").LocalPlayer.Character.Humanoid.WalkSpeed = speed.getValue()
+    else
+        game:GetService("Players").LocalPlayer.Character.Humanoid.WalkSpeed = 16
+    end
+end)
+```
