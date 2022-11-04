@@ -28,3 +28,43 @@ local bool = folder.newBooleanSetting("Boolean!", true) -- Set the default state
 ```
 A boolean setting has getters.
 You can get it's state by doing this.
+```lua
+if bool.isEnabled() then 
+    print("Boolean is enabled!")
+else
+    print("Boolean is disabled!")
+end
+```
+## Creating modes.
+```lua
+local mode = folder.newModeSetting("Modes", {"Mode 1", "Mode 2", "Mode 3"})
+```
+Like boolean settings, mode settings has a getter.
+You can get the current mode by doing this.
+```lua
+if mode.getMode() == "Mode 1" then 
+    print("Mode is 'Mode 1'")
+end
+```
+## Creating number settings.
+```lua
+local number = folder.newNumberSetting("Number", {
+    Value = 10, -- Defaults to 10
+    Min = 0, -- Defaults to 0
+    Max = 100, -- Defaults to 100
+    Step = 1 -- Defaults to 1
+})
+```
+The number setting it controlled by buttons;
+Increase and Decrease.
+
+You can also get the current value of the number!
+By doing this.
+```lua
+if number.getValue() == 20 then 
+    print("Value is 20!")
+end
+```
+
+## Conclusion.
+This is the end but I might add more features soon.
